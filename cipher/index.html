@@ -2,27 +2,27 @@
 <html lang="en">
 
 <head>
-    <!-- 
+    <!--
         Page created with 100% Vanilla JavaScript code
         Absolutly NO 3rd party frameworks or libraries abused!
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOC - Cipher</title>
-    <!-- 
-        Load the <chessmeister-board> Web Component (developed in 2020 to demo power of Web Components) 
+    <!--
+                    Load the <chessmeister-board> Web Component (developed in 2020 to demo power of Web Components)
         Web Components ARE HTML Tags!
         Unlike old jQuery $() and Framework (DOMContentLoaded) code; the script can be loaded at any time
         Existing <-> tags in the DOM page or newly created "<->" tags will *automagically* upgrade.
         -->
     <script src="https://chessmeister.github.io/elements.chessmeister.js"></script>
-    <!-- 
+    <!--
         Create HTML with a (simple) <mark-down> parser:
     -->
     <script src="https://mark-down.github.io/element.js"></script>
-    <!-- 
+    <!--
         Only use "defer" and type="module" when you know what you are doing
-        If you do not, 
+        If you do not,
         you create Web Components that DO NOT WORK WHEN LOADED FIRST (many "gurus" fail)
         -->
 
@@ -46,8 +46,10 @@
         /* Not a customElement API defined Web Component, only used for CSS styling */
     }
 
-    chess-letter-cipher h2 {
+    h2 {
         margin-block-end: .2em;
+        background:beige;
+        padding: .2em 0;
     }
 
     chess-letter-cipher p {
@@ -74,6 +76,17 @@
 </style>
 
 <body>
+    <h1>Stack Overflow Challenge - Chessboard Letter Cipher</h1>
+    <ul>
+        <li>&lt;chess-cipher> uses the chessboard <b>squares</b> as pixels, creating <b>one letter</b> on a chess-board.
+        </li>
+        <li>Code is at <a
+                href="https://stackoverflow-challenges.github.io/cipher/index.html">https://stackoverflow-challenges.github.io/cipher/index.html</a>
+        </li>
+        <li>
+            AI was used to create secondary Web Component &lt;source-viewer> (at the bottom of this page)
+        </li>
+    </ul>
     <chess-letter-cipher>
         <!-- declaring <chess-cipher> with "Declarative ShadowDOM" (DSD)
             NO JavaScript required; great for SSR -->
@@ -89,9 +102,7 @@
             <!-- <section> remain in lightDOM, so CAN be styled with global CSS -->
             <section slot="header">
                 <mark-down>
-                    # Stack Overflow Challenge - Chessboard Letter Cipher
                     ## Can you decode the cipher? AI can only deciper the simple ones!
-                    &lt;chess-cipher> uses the **squares** as pixels, creating **one letter** on a chess-board.
                     Can you decipher this letter? Hint: what are the moves?
                     Hold down CTRL key and click a board/word/letter to show the encoded letter(s)
                 </mark-down>
@@ -101,6 +112,7 @@
                 <mark-down>
                     ## Encoding 8 letter words
                     Hover over a board to display the pieces on the big board above
+                    Hold down CTRL key and click a board/word/letter to show the encoded letter(s)
                 </mark-down>
                 <p>
                     Encode: <eight-letter-words>TREASURE,LOOKLEFT,SECRETED,DIGHERE!,TOMORROW</eight-letter-words>
@@ -110,6 +122,7 @@
             <section id="ALFABET" slot="alfabet">
                 <mark-down>
                     ## The whole alfabet
+                    Click letters to write a word above
                 </mark-down>
                 <chess-cipher-board showletter input="LETTERWORD"
                     columns="13">ABCDEFGHIJKLMNOPQRSTUVWXYZ</chess-cipher-board>
@@ -166,7 +179,7 @@
         <source-viewer src="cipher_baseclass.js">
             One BaseClass file defining base functions for all other Web Components
             For a quick start you could use (Google) Lit
-            or any of its [61 alternative](https://webcomponents.dev/blog/all-the-ways-to-make-a-web-component/)) as
+            or any of its [61 alternatives](https://webcomponents.dev/blog/all-the-ways-to-make-a-web-component/)) as
             BaseClass.
         </source-viewer>
         <source-viewer src="cipher_board_letter.js">
