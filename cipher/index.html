@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 
+        Page created with 100% Vanilla JavaScript code
+        Absolutly NO 3rd party frameworks or libraries abused!
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC - Cipher</title>
+    <!-- 
+        Load the <chessmeister-board> Web Component (developed in 2020 to demo power of Web Components) 
+        Web Components ARE HTML Tags!
+        Unlike old jQuery $() and Framework (DOMContentLoaded) code; the script can be loaded at any time
+        Existing <-> tags in the DOM page or newly created "<->" tags will *automagically* upgrade.
+        -->
+    <script src="https://chessmeister.github.io/elements.chessmeister.js"></script>
+    <!-- 
+        Create HTML with a (simple) <mark-down> parser:
+    -->
+    <script src="https://mark-down.github.io/element.js"></script>
+    <!-- 
+        Only use "defer" and type="module" when you know what you are doing
+        If you do not, 
+        you create Web Components that DO NOT WORK WHEN LOADED FIRST (many "gurus" fail)
+        -->
+
+    <!-- all loading render blocking because ALL our HTML are Web Components defining the UI (we don't want FOUCs)-->
+    <!-- do learn "defer" , "async" , "type="module" for your own best loading scenarios -->
+    <script src="cipher_baseclass.js"></script>
+    <script src="cipher_board.js"></script>
+    <script src="cipher_board_letter.js"></script>
+    <script src="cipher_board_word.js"></script>
+</head>
+
+<style>
+    /* Global CSS */
+    body {
+        font: 16px arial;
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+
+    chess-letter-cipher {
+        /* Not a customElement API defined Web Component, only used for CSS styling */
+    }
+
+    chess-letter-cipher h2 {
+        margin-block-end: .2em;
+    }
+
+    chess-letter-cipher p {
+        margin-block: .2em;
+    }
+
+    chess-letter-cipher #ALFABET chess-cipher-board {
+        /* do NOT show squarecolors on alfabet letters */
+        --chessmeister-square-color: beige;
+        --chessmeister-squarewhite-color: var(--chessmeister-square-color);
+        --chessmeister-squareblack-color: var(--chessmeister-square-color);
+    }
+
+    /* stop whining about not being able to style shadowDOM */
+    /* there are CSS properties, adoptedStyleSheet (and Themes in the works)
+       here is a shadowPart */
+    chess-letter-cipher chess-cipher-board::part(letter) {
+        border: 1px solid black;
+    }
+
+    [slot="sources"] {
+        margin-bottom: 50vh;
+    }
+</style>
+
+<body>
+    <chess-letter-cipher>
+        <!-- declaring <chess-cipher> with "Declarative ShadowDOM" (DSD)
+            NO JavaScript required; great for SSR -->
+        <chess-chiper>
+            <template shadowrootmode="open">
+                <slot></slot>
+                <slot name="header"></slot>
+                <slot name="word"></slot>
+                <slot name="alfabet"></slot>
+                <slot name="footer"></slot>
+                <slot name="sources"></slot>
+            </template>
+            <!-- <section> remain in lightDOM, so CAN be styled with global CSS -->
+            <section slot="header">
+                <mark-down>
+                    # Stack Overflow Challenge - Chessboard Letter Cipher
+                    ## Can you decode the cipher? AI can only deciper the simple ones!
+                    &lt;chess-cipher> uses the **squares** as pixels, creating **one letter** on a chess-board.
+                    Can you decipher this letter? Hint: what are the moves?
+                    Hold down CTRL key and click a board/word/letter to show the encoded letter(s)
+                </mark-down>
+                <chess-cipher-board id="MAINBOARD">I</chess-cipher-board>
+            </section>
+            <section slot="word">
+                <mark-down>
+                    ## Encoding 8 letter words
+                    Hover over a board to display the pieces on the big board above
+                </mark-down>
+                <p>
+                    Encode: <eight-letter-words>TREASURE,LOOKLEFT,SECRETED,DIGHERE!,TOMORROW</eight-letter-words>
+                </p>
+                <chess-cipher-board id="LETTERWORD" columns="8">TREASURE</chess-cipher-board>
+            </section>
+            <section id="ALFABET" slot="alfabet">
+                <mark-down>
+                    ## The whole alfabet
+                </mark-down>
+                <chess-cipher-board showletter input="LETTERWORD"
+                    columns="13">ABCDEFGHIJKLMNOPQRSTUVWXYZ</chess-cipher-board>
+            </section>
+            <section slot="footer">
+                <mark-down>
+                    ## ChatGPT has humor
+                    It can not decipher all letters correctly and translates the **eight letter** word
+                    TREASURE as:
+                </mark-down>
+                <img src="ai_solution_checkmate.png">
+            </section>
+        </chess-chiper>
+    </chess-letter-cipher>
+
+    <section slot="sources">
+        <mark-down>
+            ## Source files
+            Files below are the live source files used on this site.
+            I tried to add some meaningful comments to these files.
+        </mark-down>
+        <!-- add additional Web Component <sources-viewer> to display all source files (syntax highlighted with <code-embed>)
+            it needs to load and be defined sometime, might as well do it here
+            all code inline so definition and usage are close together -->
+        <script src="https://code-embed.github.io/code-embed-baseclass.js?name=code-embed&22"></script>
+        <script>
+            customElements.define("source-viewer", class extends HTMLElement {
+                connectedCallback() {
+                    setTimeout(() => {
+                        const createElement = (tag, props = {}) => Object.assign(document.createElement(tag), props);
+                        const src = this.getAttribute("src");
+                        this
+                            .attachShadow({ mode: "open" })
+                            .append(
+                                createElement("style", {
+                                    textContent: `summary{cursor:pointer}b{color:blue}code-embed{margin-left:2em}`
+                                }),
+                                createElement("hr", {}),
+                                createElement("h3", { innerHTML: src }),
+                                createElement("mark-down", { innerHTML: this.innerHTML }),
+                                createElement("details", {
+                                    innerHTML:
+                                        `<summary>see: <b>${src}</b></summary>` +
+                                        `<code-embed src="${src}"></code-embed>`
+                                })
+                            )
+                    })
+                }
+            })
+        </script>
+        <source-viewer src="index.html">
+            A clean semantic HTML file
+        </source-viewer>
+        <source-viewer src="cipher_baseclass.js">
+            One BaseClass file defining base functions for all other Web Components
+            For a quick start you could use (Google) Lit
+            or any of its [61 alternative](https://webcomponents.dev/blog/all-the-ways-to-make-a-web-component/)) as
+            BaseClass.
+        </source-viewer>
+        <source-viewer src="cipher_board_letter.js">
+            Loads the origal **2020** Chessboard Web Component &lt;chessmeister-board>
+            Extend it creating a new &lt;chessmeister-board-letter>, (mainly) removing old 2020 sh*
+        </source-viewer>
+        <source-viewer src="cipher_board.js">
+            Main &lt;chess-cipher-board> Web Component, displaying letters using Chess Piece postions
+        </source-viewer>
+        <source-viewer src="cipher_board_word.js">
+            &lt;eight-letter-words> converting (8 letter) code words to UI displaying 8 boards
+            in &lt;chess-cipher-board id="LETTERWORD" columns="8">TREASURE&lt;/chess-cipher-board>
+        </source-viewer>
+    </section>
+
+</body>
+
+</html>

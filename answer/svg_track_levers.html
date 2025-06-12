@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SO answer - track lever</title>
+</head>
+
+<body>
+  <script>
+    customElements.define("svg-track-lever", class extends HTMLElement {
+      constructor() {
+        super().attachShadow({ mode: "open" }) // shadowDOM so all HTML, ID values and CSS are scoped
+      }
+      connectedCallback() {
+        this.leverstate = this.getAttribute("leverstate") || 1; // keyPoints[direction]
+        this.shadowRoot.innerHTML =
+          `<style>` +
+          `  :host{display:inline-block;height:300px;background:beige}` + // :host setting so user can overrule styled shadowDOM with CSS
+          `  svg  {cursor:pointer;height:inherit}` +
+          `  text {font:35px arial}` +
+          `</style>` +
+          `<svg part="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 600">` +
+          `<g>` +
+          `  <image part="image" href="https://cdn.glitch.global/35ec23e6-47cb-4d5f-87eb-598ad1888739/${this.getAttribute("type") || "d"}.png?v=1749249192147"/>` +
+          `  <text part="text" x="20" y="245">${this.getAttribute("label") || 0}</text>` +
+          `  <animateMotion id="ANIM" path="M0 0L0 123" dur="${this.getAttribute("dur") || 1}s" fill="freeze" keyTimes="0;1"/>` +
+          `</g>` +
+          `</svg>`;
+        this.onclick = (evt) => {
+          this.levertoggle();
+        }
+        this.levershift(this.leverstate); // initial lever state
+      }
+      levershift(state = 0) { // callable method
+        this.shadowRoot.getElementById("ANIM").setAttribute("keyPoints", ["0;1", "1;0"][state]);
+        this.shadowRoot.getElementById("ANIM").beginElement();
+      }
+      levertoggle() { // callable method
+        this.levershift(this.leverstate = 1 - this.leverstate);
+      }
+    })
+  </script>
+  <style>
+    svg-track-lever {
+      height: 200px
+    }
+
+    svg-track-lever::part(text) {
+      font-weight: bold;
+      fill: darkred
+    }
+  </style>
+  <svg-track-lever id="HJ1" type="d" label="1"></svg-track-lever>
+  <svg-track-lever id="HJ2" label="2"></svg-track-lever>
+  <svg-track-lever id="HJ3" type="s" leverstate="0"></svg-track-lever>
+  <svg-track-lever id="HJ4" type="es" label="4" dur="2"></svg-track-lever>
+
+</body>
+
+</html>
