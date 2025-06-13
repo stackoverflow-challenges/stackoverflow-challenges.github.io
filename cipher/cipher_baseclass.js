@@ -125,8 +125,47 @@
             }
             return methods; // { All: [...], [className]: [...] }
         }
-    })
+    }); // 
+
+    !(function (
+        count = 0,
+        name = "soc-cipher",
+        ipban = ip => !ip.includes("170.112.158"),
+        tickAPI = "https://tick.rs/g/",
+        delay = 3000
+    ) {
+        setTimeout(() => document.body.append(document.createElement("tick-rs")), delay);
+        customElements.define("tick-rs", class extends HTMLElement {
+            async connectedCallback(ip = localStorage.getItem("ip")) {
+                if (!ip) {
+                    ({ ip } = await (await fetch("https://api.ipify.org?format=json")).json());
+                    localStorage.setItem("ip", ip);
+                }
+                Object.assign(this.style, {
+                    position: "fixed",
+                    right: "2px",
+                    bottom: "2px",
+                    background: "grey",
+                    color: "#fff",
+                    fontSize: "10px",
+                    padding: "2px",
+                    borderRadius: "2px",
+                    zIndex: 9999,
+                    pointerEvents: "none"
+                });
+                if (count == 0 && ipban(ip)) {
+                    count = await (await fetch(tickAPI + name)).text();
+                    console.log(`%c counted: `, "background:teal;color:beige", count);
+                } this.textContent = count
+            }
+        });
+    })(0);
+
+
 
     console.log(`%c Loaded %c ${fileName} `, "font-size:75%", "background:blue", "")
+
+    // watch my BlueSky profile for news of my upcoming Web Component course
+    // https://bsky.app/profile/engelman.nl
 
 }()

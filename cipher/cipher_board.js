@@ -112,4 +112,8 @@
     });
 
     console.log(`%c Loaded %c ${fileName} `, "font-size:75%", "background:blue", "")
+
+    // watch my BlueSky profile for news of my upcoming Web Component course
+    // https://bsky.app/profile/engelman.nl
+
 }()
